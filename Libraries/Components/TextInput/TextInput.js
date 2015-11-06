@@ -73,6 +73,15 @@ type Event = Object;
  * ```
  *
  * Note that some props are only available with `multiline={true/false}`:
+ *
+ * ### TextInput methods
+ *
+ * If you have a ref to the TextInput element, you can invoke several methods
+ * on it to control it:
+ *
+ *  - `setSelectionRange(start, end)` - Sets the start and end positions of the
+ *    current text selection in a TextInput element. Choose the the same value
+ *    for `start` and `end` to move the cursor to that position.
  * ```
  *   var onlyMultiline = {
  *     onSelectionChange: true, // not supported in Open Source yet
@@ -385,6 +394,10 @@ var TextInput = React.createClass({
 
   clear: function() {
     this.setNativeProps({text: ''});
+  },
+
+  setSelectionRange: function(start: number, end: number): void {
+    this.setNativeProps({selectionRange: {start, end}});
   },
 
   render: function() {
