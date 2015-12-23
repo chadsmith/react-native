@@ -24,6 +24,7 @@
 
 @implementation RCTTabBar
 {
+  UIColor *_selectionIndicatorColor;
   BOOL _tabsChanged;
   UITabBarController *_tabController;
   NSMutableArray<RCTTabBarItem *> *_tabViews;
@@ -104,6 +105,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
     _tabController.viewControllers = viewControllers;
     _tabsChanged = NO;
+    if(_selectionIndicatorColor)
+      [self setSelectionIndicatorColor:_selectionIndicatorColor];
   }
 
   [_tabViews enumerateObjectsUsingBlock:
@@ -136,12 +139,32 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   _tabController.tabBar.tintColor = tintColor;
 }
 
+- (void)setSelectionIndicatorColor:(UIColor *)selectionIndicatorColor
+{
+  _selectionIndicatorColor = selectionIndicatorColor;
+  if(_tabViews.count > 0) {
+    float scaleFactor = [[UIScreen mainScreen] scale];
+    CGRect rect = CGRectMake(0.0f, 0.0f, _tabController.tabBar.frame.size.width / _tabViews.count / scaleFactor, _tabController.tabBar.frame.size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [selectionIndicatorColor CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    _tabController.tabBar.selectionIndicatorImage = image;
+  }
+}
+
 - (BOOL)translucent {
   return _tabController.tabBar.isTranslucent;
 }
 
 - (void)setTranslucent:(BOOL)translucent {
   _tabController.tabBar.translucent = translucent;
+}
+
+- (void)setShadow:(BOOL)shadow {
+  [_tabController.tabBar setValue:@(!shadow) forKeyPath:@"_hidesShadow"];
 }
 
 #pragma mark - UITabBarControllerDelegate
