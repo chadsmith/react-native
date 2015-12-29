@@ -46,7 +46,7 @@ var TabBarIOS = React.createClass({
      */
     shadow: React.PropTypes.bool,
     /**
-     * A Boolean value that indicates whether the tab bar should have a top shadow
+     * A Boolean value that indicates whether the tab bar should allow user interaction
      */
     enabled: React.PropTypes.bool,
   },
