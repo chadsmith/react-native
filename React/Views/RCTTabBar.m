@@ -143,8 +143,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 {
   _selectionIndicatorColor = selectionIndicatorColor;
   if(_tabViews.count > 0) {
-    float scaleFactor = [[UIScreen mainScreen] scale];
-    CGRect rect = CGRectMake(0.0f, 0.0f, _tabController.tabBar.frame.size.width / _tabViews.count / scaleFactor, _tabController.tabBar.frame.size.height);
+    CGRect rect = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width / _tabViews.count, _tabController.tabBar.frame.size.height);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(context, [selectionIndicatorColor CGColor]);
