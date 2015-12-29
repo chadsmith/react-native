@@ -45,6 +45,10 @@ var TabBarIOS = React.createClass({
      * A Boolean value that indicates whether the tab bar should have a top shadow
      */
     shadow: React.PropTypes.bool,
+    /**
+     * A Boolean value that indicates whether the tab bar should have a top shadow
+     */
+    enabled: React.PropTypes.bool,
   },
 
   render: function() {
@@ -55,7 +59,8 @@ var TabBarIOS = React.createClass({
         barTintColor={this.props.barTintColor}
         translucent={this.props.translucent !== false}
         selectionIndicatorColor={this.props.selectionIndicatorColor}
-        shadow={this.props.shadow !== false}>
+        shadow={this.props.shadow !== false}
+        enabled={this.props.enabled !== false}>
         {this.props.children}
       </RCTTabBar>
     );

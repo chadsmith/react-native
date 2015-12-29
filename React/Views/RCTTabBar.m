@@ -167,6 +167,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   [_tabController.tabBar setValue:@(!shadow) forKeyPath:@"_hidesShadow"];
 }
 
+- (void)setEnabled:(BOOL)enabled {
+  _tabController.tabBar.userInteractionEnabled = enabled;
+}
+
 #pragma mark - UITabBarControllerDelegate
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
