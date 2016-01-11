@@ -283,7 +283,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
    ^(NSUInteger idx, __unused BOOL *stop) {
 
     if (idx >= subviewCount) {
-      RCTLogError(@"Sticky header index %zd was outside the range {0, %zd}", idx, subviewCount);
+      RCTLogWarn(@"Sticky header index %zd was outside the range {0, %zd}", idx, subviewCount);
       return;
     }
 
@@ -341,9 +341,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
   __block UIView *hitView;
+  UIView *contentView = [self contentView];
+  NSUInteger subviewCount = contentView.reactSubviews.count;
 
   [_stickyHeaderIndices enumerateIndexesWithOptions:0 usingBlock:^(NSUInteger idx, BOOL *stop) {
-    UIView *stickyHeader = [self contentView].reactSubviews[idx];
+
+    if (idx >= subviewCount) {
+      RCTLogWarn(@"Sticky header index %zd was outside the range {0, %zd}", idx, subviewCount);
+      return;
+    }
+
+    UIView *stickyHeader = contentView.reactSubviews[idx];
     CGPoint convertedPoint = [stickyHeader convertPoint:point fromView:self];
     hitView = [stickyHeader hitTest:convertedPoint withEvent:event];
     *stop = (hitView != nil);
