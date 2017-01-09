@@ -24,6 +24,7 @@
 
 @implementation RCTTabBar
 {
+  UIColor *_selectionIndicatorColor;
   BOOL _tabsChanged;
   UITabBarController *_tabController;
 }
@@ -102,6 +103,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
     _tabController.viewControllers = viewControllers;
     _tabsChanged = NO;
+    if(_selectionIndicatorColor)
+      [self setSelectionIndicatorColor:_selectionIndicatorColor];
   }
 
   [self.reactSubviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger index, __unused BOOL *stop) {
@@ -141,12 +144,31 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   _tabController.tabBar.tintColor = tintColor;
 }
 
+- (void)setSelectionIndicatorColor:(UIColor *)selectionIndicatorColor
+{
+  _selectionIndicatorColor = selectionIndicatorColor;
+  if(self.reactSubviews.count > 0) {
+    CGRect rect = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width / self.reactSubviews.count, _tabController.tabBar.frame.size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [selectionIndicatorColor CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    _tabController.tabBar.selectionIndicatorImage = image;
+  }
+}
+
 - (BOOL)translucent {
   return _tabController.tabBar.isTranslucent;
 }
 
 - (void)setTranslucent:(BOOL)translucent {
   _tabController.tabBar.translucent = translucent;
+}
+
+- (void)setShadow:(BOOL)shadow {
+  [_tabController.tabBar setValue:@(!shadow) forKeyPath:@"_hidesShadow"];
 }
 
 - (UITabBarItemPositioning)itemPositoning
@@ -163,6 +185,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 #if !TARGET_OS_TV
   _tabController.tabBar.itemPositioning = itemPositioning;
 #endif
+}
+
+- (void)setEnabled:(BOOL)enabled {
+  _tabController.tabBar.userInteractionEnabled = enabled;
 }
 
 #pragma mark - UITabBarControllerDelegate

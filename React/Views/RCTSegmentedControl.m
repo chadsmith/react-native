@@ -52,4 +52,12 @@
   }
 }
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+  NSInteger previousSelectedSegmentIndex = self.selectedSegmentIndex;
+  [super touchesEnded:touches withEvent:event];
+  if(previousSelectedSegmentIndex == self.selectedSegmentIndex)
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
+}
+
 @end

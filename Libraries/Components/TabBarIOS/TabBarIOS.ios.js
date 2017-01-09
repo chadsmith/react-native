@@ -50,6 +50,18 @@ class TabBarIOS extends React.Component {
      * A Boolean value that indicates whether the tab bar is translucent
      */
     translucent: React.PropTypes.bool,
+     /**
+     * Background color of the selected tab
+     */
+    selectionIndicatorColor: React.PropTypes.string,
+    /**
+     * A Boolean value that indicates whether the tab bar should have a top shadow
+     */
+    shadow: React.PropTypes.bool,
+    /**
+     * A Boolean value that indicates whether the tab bar should allow user interaction
+     */
+    enabled: React.PropTypes.bool,
     /**
      * Specifies tab bar item positioning. Available values are:
      * - fill - distributes items across the entire width of the tab bar
@@ -70,7 +82,10 @@ class TabBarIOS extends React.Component {
         tintColor={this.props.tintColor}
         barTintColor={this.props.barTintColor}
         itemPositioning={this.props.itemPositioning}
-        translucent={this.props.translucent !== false}>
+        translucent={this.props.translucent !== false}
+        selectionIndicatorColor={this.props.selectionIndicatorColor}
+        shadow={this.props.shadow !== false}
+        enabled={this.props.enabled !== false}>
         {
           // $FlowFixMe found when converting React.createClass to ES6
           this.props.children}
