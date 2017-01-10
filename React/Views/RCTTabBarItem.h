@@ -21,5 +21,6 @@
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 @property (nonatomic, readonly) UITabBarItem *barItem;
 @property (nonatomic, copy) RCTBubblingEventBlock onPress;
+@property (nonatomic, strong) UIColor *backgroundColor;
 
 @end

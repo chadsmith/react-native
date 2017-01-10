@@ -105,6 +105,18 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
     _tabsChanged = NO;
     if(_selectionIndicatorColor)
       [self setSelectionIndicatorColor:_selectionIndicatorColor];
+
+    [self.reactSubviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger index, __unused BOOL *stop) {
+      RCTTabBarItem *tab = (RCTTabBarItem *)view;
+      if(tab.backgroundColor) {
+        float itemWidth = [UIScreen mainScreen].bounds.size.width / self.reactSubviews.count;
+        CGRect rect = CGRectMake(itemWidth * index, 0.0f, itemWidth, _tabController.tabBar.frame.size.height);
+        UIView* bgView = [[UIView alloc]initWithFrame: rect];
+        bgView.backgroundColor = tab.backgroundColor;
+        [_tabController.tabBar insertSubview:bgView atIndex:1];
+      }
+    }];
+
   }
 
   [self.reactSubviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger index, __unused BOOL *stop) {

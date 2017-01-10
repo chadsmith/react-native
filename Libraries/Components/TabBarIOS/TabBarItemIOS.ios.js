@@ -11,6 +11,7 @@
  */
 'use strict';
 
+var ColorPropType = require('ColorPropType');
 var Image = require('Image');
 var React = require('React');
 var StaticContainer = require('StaticContainer.react');
@@ -81,6 +82,10 @@ class TabBarItemIOS extends React.Component {
      * is defined.
      */
     title: React.PropTypes.string,
+    /**
+     * Background color of the tab
+     */
+    backgroundColor: ColorPropType,
   };
 
   state = {
