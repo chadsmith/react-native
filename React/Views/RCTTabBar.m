@@ -35,6 +35,7 @@
     _tabController = [UITabBarController new];
     _tabController.delegate = self;
     [self addSubview:_tabController.view];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification" object:nil];
   }
   return self;
 }
@@ -50,6 +51,15 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 {
   _tabController.delegate = nil;
   [_tabController removeFromParentViewController];
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1f * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    _tabsChanged = YES;
+    [self reactBridgeDidFinishTransaction];
+  });
 }
 
 - (void)insertReactSubview:(RCTTabBarItem *)subview atIndex:(NSInteger)atIndex
@@ -105,6 +115,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
     _tabsChanged = NO;
     if(_selectionIndicatorColor)
       [self setSelectionIndicatorColor:_selectionIndicatorColor];
+
+    [_tabController.tabBar.subviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger index, __unused BOOL *stop) {
+      if([view isKindOfClass:[UIView class]] && view.backgroundColor) {
+        [view removeFromSuperview];
+      }
+    }];
 
     [self.reactSubviews enumerateObjectsUsingBlock:^(UIView *view, NSUInteger index, __unused BOOL *stop) {
       RCTTabBarItem *tab = (RCTTabBarItem *)view;
@@ -180,7 +196,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 }
 
 - (void)setShadow:(BOOL)shadow {
-  [_tabController.tabBar setValue:@(!shadow) forKeyPath:@"_hidesShadow"];
+  _tabController.tabBar.clipsToBounds = !shadow;
 }
 
 - (UITabBarItemPositioning)itemPositoning
